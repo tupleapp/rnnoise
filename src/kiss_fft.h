@@ -106,16 +106,16 @@ typedef struct kiss_fft_state{
 /*typedef struct kiss_fft_state* kiss_fft_cfg;*/
 
 /**
- *  opus_fft_alloc
+ *  tn_opus_fft_alloc
  *
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      kiss_fft_cfg mycfg=opus_fft_alloc(1024,0,NULL,NULL);
+ *  typical usage:      kiss_fft_cfg mycfg=tn_opus_fft_alloc(1024,0,NULL,NULL);
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
  *
- *  If lenmem is NULL, then opus_fft_alloc will allocate a cfg buffer using malloc.
+ *  If lenmem is NULL, then tn_opus_fft_alloc will allocate a cfg buffer using malloc.
  *  The returned value should be free()d when done to avoid memory leaks.
  *
  *  The state can be placed in a user supplied buffer 'mem':
@@ -128,9 +128,9 @@ typedef struct kiss_fft_state{
  *      buffer size in *lenmem.
  * */
 
-kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const kiss_fft_state *base, int arch);
+kiss_fft_state *tn_opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const kiss_fft_state *base, int arch);
 
-kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
+kiss_fft_state *tn_opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
 
 /**
  * opus_fft(cfg,in_out_buf)
@@ -142,32 +142,32 @@ kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
  * Note that each element is complex and can be accessed like
     f[k].r and f[k].i
  * */
-void opus_fft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
-void opus_ifft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
+void tn_opus_fft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
+void tn_opus_ifft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
 
-void opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout);
+void tn_opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout);
 void opus_ifft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout);
 
-void opus_fft_free(const kiss_fft_state *cfg, int arch);
+void tn_opus_fft_free(const kiss_fft_state *cfg, int arch);
 
 
-void opus_fft_free_arch_c(kiss_fft_state *st);
-int opus_fft_alloc_arch_c(kiss_fft_state *st);
+void tn_opus_fft_free_arch_c(kiss_fft_state *st);
+int tn_opus_fft_alloc_arch_c(kiss_fft_state *st);
 
 #if !defined(OVERRIDE_OPUS_FFT)
 /* Is run-time CPU detection enabled on this platform? */
 #if defined(OPUS_HAVE_RTCD) && (defined(HAVE_ARM_NE10))
 
-extern int (*const OPUS_FFT_ALLOC_ARCH_IMPL[OPUS_ARCHMASK+1])(
+extern int (*const tn_opus_fft_alloc_ARCH_IMPL[OPUS_ARCHMASK+1])(
  kiss_fft_state *st);
 
-#define opus_fft_alloc_arch(_st, arch) \
-         ((*OPUS_FFT_ALLOC_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
+#define tn_opus_fft_alloc_arch(_st, arch) \
+         ((*tn_opus_fft_alloc_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
 
-extern void (*const OPUS_FFT_FREE_ARCH_IMPL[OPUS_ARCHMASK+1])(
+extern void (*const tn_opus_fft_free_ARCH_IMPL[OPUS_ARCHMASK+1])(
  kiss_fft_state *st);
-#define opus_fft_free_arch(_st, arch) \
-         ((*OPUS_FFT_FREE_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
+#define tn_opus_fft_free_arch(_st, arch) \
+         ((*tn_opus_fft_free_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
 
 extern void (*const OPUS_FFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
  const kiss_fft_cpx *fin, kiss_fft_cpx *fout);
@@ -181,17 +181,17 @@ extern void (*const OPUS_IFFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
 
 #else /* else for if defined(OPUS_HAVE_RTCD) && (defined(HAVE_ARM_NE10)) */
 
-#define opus_fft_alloc_arch(_st, arch) \
-         ((void)(arch), opus_fft_alloc_arch_c(_st))
+#define tn_opus_fft_alloc_arch(_st, arch) \
+         ((void)(arch), tn_opus_fft_alloc_arch_c(_st))
 
-#define opus_fft_free_arch(_st, arch) \
-         ((void)(arch), opus_fft_free_arch_c(_st))
+#define tn_opus_fft_free_arch(_st, arch) \
+         ((void)(arch), tn_opus_fft_free_arch_c(_st))
 
 #define opus_fft(_cfg, _fin, _fout, arch) \
-         ((void)(arch), opus_fft_c(_cfg, _fin, _fout))
+         ((void)(arch), tn_opus_fft_c(_cfg, _fin, _fout))
 
 #define opus_ifft(_cfg, _fin, _fout, arch) \
-         ((void)(arch), opus_ifft_c(_cfg, _fin, _fout))
+         ((void)(arch), tn_opus_ifft_c(_cfg, _fin, _fout))
 
 #endif /* end if defined(OPUS_HAVE_RTCD) && (defined(HAVE_ARM_NE10)) */
 #endif /* end if !defined(OVERRIDE_OPUS_FFT) */
