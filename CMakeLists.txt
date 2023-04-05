@@ -28,6 +28,6 @@ add_library(rnnoise ${SOURCES})
 
 # Include dirs
 target_include_directories(rnnoise PUBLIC
-        $<BUILD_INTERFACE:${rnnoise_project_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+        ${rnnoise_project_SOURCE_DIR}/include
+        include
         PRIVATE ${rnnoise_project_SOURCE_DIR}/src)
