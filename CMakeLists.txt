@@ -23,6 +23,11 @@ set(
 # Build rnnoise
 add_definitions(-DRNNOISE_BUILD)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # MSVC requires this to expose definitions like M_PI
+    add_definitions(-D_USE_MATH_DEFINES)
+endif()
+
 # Compile the library
 add_library(rnnoise ${SOURCES})
 
