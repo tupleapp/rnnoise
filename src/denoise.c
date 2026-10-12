@@ -473,7 +473,7 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
 
   if (!silence) {
 #if !TRAINING
-    compute_rnn(&st->model, &st->rnn, g, &vad_prob, features, st->arch);
+    rnn_compute_rnn(&st->model, &st->rnn, g, &vad_prob, features, st->arch);
 #endif
     rnn_pitch_filter(st->delayed_X, st->delayed_P, st->delayed_Ex, st->delayed_Ep, st->delayed_Exp, g);
     for (i=0;i<NB_BANDS;i++) {
