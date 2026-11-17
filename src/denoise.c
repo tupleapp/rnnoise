@@ -479,6 +479,9 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
       float alpha = .6f;
       g[i] = MAX16(g[i], alpha*st->lastg[i]);
       st->lastg[i] = g[i];
+      /* Squared gains: the model's own gains leave steady noise only 30-40 dB down, which plays as
+         hiss in pauses; squaring doubles that in dB while speech bands, near 1, keep theirs (TUP-4621). */
+      g[i] *= g[i];
     }
     interp_band_gain(gf, g);
 #if 1
